@@ -160,7 +160,7 @@ export const NewsAggregator: React.FC = () => {
               className="bg-black hover:bg-gray-800 disabled:bg-gray-600 text-white px-8 py-4 font-bold tracking-wide transition-colors flex items-center space-x-2 border-2 border-black hover:border-gray-800"
             >
               <TrendingUp className="w-5 h-5" />
-              <span>{isProcessing ? 'PROCESSING...' : 'GENERATE INTELLIGENCE'}</span>
+              <span>{isProcessing ? 'PROCESSING...' : 'GENERATE ARTICLE'}</span>
             </button>
           </div>
         </div>
