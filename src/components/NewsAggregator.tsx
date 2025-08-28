@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Newspaper, TrendingUp, Landmark, PieChart, DollarSign, Building2, Clock, Target, ThumbsUp, ThumbsDown, Minus } from 'lucide-react';
+import { Newspaper, TrendingUp, Landmark, PieChart, DollarSign, Building2, Clock, Target, ThumbsUp, ThumbsDown, Minus, ChevronDown, ChevronUp, ExternalLink } from 'lucide-react';
 import { generateSampleArticles, getNewsSources } from '../data/sampleArticles';
 import { NewsFilter } from '../services/newsFilter';
 import { MagazineCompiler } from '../services/magazineCompiler';
@@ -35,6 +35,7 @@ interface ProcessingStep {
 export const NewsAggregator: React.FC = () => {
   const [isProcessing, setIsProcessing] = useState(false);
   const [magazine, setMagazine] = useState<Magazine | null>(null);
+  const [expandedArticles, setExpandedArticles] = useState<Set<string>>(new Set());
   const [processingSteps, setProcessingSteps] = useState<ProcessingStep[]>([]);
   const [statistics, setStatistics] = useState<{
     totalArticles: number;
@@ -43,7 +44,7 @@ export const NewsAggregator: React.FC = () => {
     categoryBreakdown: Record<string, number>;
   } | null>(null);
 
-  const simulateApiDelay = (min: number, max: number) => 
+  const delay = (min: number, max: number) => 
     new Promise(resolve => setTimeout(resolve, Math.random() * (max - min) + min));
 
   const updateProcessingStep = (stepIndex: number, completed: boolean) => {
@@ -52,46 +53,59 @@ export const NewsAggregator: React.FC = () => {
     ));
   };
 
+  const toggleArticle = (articleId: string) => {
+    setExpandedArticles(prev => {
+      const newSet = new Set(prev);
+      if (newSet.has(articleId)) {
+        newSet.delete(articleId);
+      } else {
+        newSet.add(articleId);
+      }
+      return newSet;
+    });
+  };
+
   const processNews = async () => {
     setIsProcessing(true);
     setMagazine(null);
     setStatistics(null);
+    setExpandedArticles(new Set());
     
     const steps: ProcessingStep[] = [
-      { step: "Market Data Collection", message: "Accessing premium financial data feeds from elite sources...", completed: false },
+      { step: "Data Acquisition", message: "Accessing premium financial data feeds from institutional sources...", completed: false },
       { step: "Intelligence Analysis", message: "Applying proprietary algorithms for relevance and sentiment scoring...", completed: false },
       { step: "Content Optimization", message: "Filtering redundant information and optimizing signal quality...", completed: false },
-      { step: "Executive Compilation", message: "Structuring intelligence into executive-ready format...", completed: false },
-      { step: "Premium Delivery", message: "Generating institutional-grade financial intelligence digest...", completed: false }
+      { step: "Report Compilation", message: "Structuring intelligence into executive-ready format...", completed: false },
+      { step: "Delivery Preparation", message: "Finalizing institutional-grade financial intelligence digest...", completed: false }
     ];
     
     setProcessingSteps(steps);
 
     try {
-      // Step 1: Simulate data collection
-      await simulateApiDelay(1000, 2000);
+      // Step 1: Data collection
+      await delay(1000, 2000);
       const articles = generateSampleArticles();
       const sources = getNewsSources();
       updateProcessingStep(0, true);
 
       // Step 2: Process articles
-      await simulateApiDelay(800, 1500);
+      await delay(800, 1500);
       const newsFilter = new NewsFilter();
       const processedArticles = newsFilter.processArticles(articles);
       updateProcessingStep(1, true);
 
-      // Step 3: Remove duplicates (already done in processArticles)
-      await simulateApiDelay(500, 1000);
+      // Step 3: Content optimization
+      await delay(500, 1000);
       updateProcessingStep(2, true);
 
       // Step 4: Compile magazine
-      await simulateApiDelay(600, 1200);
+      await delay(600, 1200);
       const compiler = new MagazineCompiler();
       const compiledMagazine = compiler.compileMagazine(processedArticles);
       updateProcessingStep(3, true);
 
-      // Step 5: Generate output
-      await simulateApiDelay(400, 800);
+      // Step 5: Final preparation
+      await delay(400, 800);
       setMagazine(compiledMagazine);
       updateProcessingStep(4, true);
 
@@ -112,7 +126,7 @@ export const NewsAggregator: React.FC = () => {
       });
 
     } catch (error) {
-      console.error('Error processing news:', error);
+      console.error('Error processing financial intelligence:', error);
     } finally {
       setIsProcessing(false);
     }
@@ -137,7 +151,7 @@ export const NewsAggregator: React.FC = () => {
               <TrendingUp className="w-10 h-10 text-black" />
               <div>
                 <h1 className="text-4xl font-bold text-black tracking-tight">FINANCIAL INTELLIGENCE</h1>
-                <p className="text-gray-700 text-lg font-medium">Premium Market Analysis & Corporate Intelligence</p>
+                <p className="text-gray-700 text-lg font-medium">Premium Market Analysis & Corporate Intelligence Platform</p>
               </div>
             </div>
             <button
@@ -146,7 +160,7 @@ export const NewsAggregator: React.FC = () => {
               className="bg-black hover:bg-gray-800 disabled:bg-gray-600 text-white px-8 py-4 font-bold tracking-wide transition-colors flex items-center space-x-2 border-2 border-black hover:border-gray-800"
             >
               <TrendingUp className="w-5 h-5" />
-              <span>{isProcessing ? 'ANALYZING...' : 'ANALYZE MARKETS'}</span>
+              <span>{isProcessing ? 'PROCESSING...' : 'GENERATE INTELLIGENCE'}</span>
             </button>
           </div>
         </div>
@@ -181,7 +195,7 @@ export const NewsAggregator: React.FC = () => {
         {/* Statistics */}
         {statistics && (
           <div className="bg-white text-black rounded-none shadow-lg p-8 mb-8 border-l-8 border-black">
-            <h2 className="text-2xl font-bold text-black mb-6 tracking-wide">MARKET INTELLIGENCE METRICS</h2>
+            <h2 className="text-2xl font-bold text-black mb-6 tracking-wide">INTELLIGENCE METRICS</h2>
             <div className="grid grid-cols-1 md:grid-cols-4 gap-8">
               <div className="text-center">
                 <div className="text-4xl font-bold text-black">{statistics.totalArticles}</div>
@@ -248,11 +262,13 @@ export const NewsAggregator: React.FC = () => {
                     <div className="space-y-8">
                       {section.articles.map((article, index) => {
                         const SentimentIcon = sentimentIcons[article.sentiment];
+                        const isExpanded = expandedArticles.has(article.id);
                         
                         return (
                           <div key={article.id} className="border-b border-gray-300 pb-8 last:border-b-0">
                             <div className="flex items-start justify-between mb-4">
-                              <h3 className="text-2xl font-bold text-black flex-1 mr-4 leading-tight">
+                              <h3 className="text-2xl font-bold text-black flex-1 mr-4 leading-tight cursor-pointer hover:text-gray-700 transition-colors"
+                                  onClick={() => toggleArticle(article.id)}>
                                 {article.title}
                               </h3>
                               <div className="flex items-center space-x-2">
@@ -260,6 +276,12 @@ export const NewsAggregator: React.FC = () => {
                                   <Target className="w-3 h-3" />
                                   <span>{article.relevanceScore.toFixed(2)}</span>
                                 </div>
+                                <button
+                                  onClick={() => toggleArticle(article.id)}
+                                  className="bg-gray-200 hover:bg-gray-300 text-black p-2 transition-colors"
+                                >
+                                  {isExpanded ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                                </button>
                               </div>
                             </div>
                             
@@ -275,11 +297,56 @@ export const NewsAggregator: React.FC = () => {
                               </div>
                             </div>
                             
-                            <p className="text-black mb-4 text-lg leading-relaxed">{article.content}</p>
+                            {/* Article Preview */}
+                            <p className="text-black mb-4 text-lg leading-relaxed">
+                              {isExpanded ? article.content : `${article.content.substring(0, 200)}...`}
+                            </p>
+
+                            {/* Expanded Content */}
+                            {isExpanded && (
+                              <div className="bg-gray-50 border-l-4 border-black p-6 mb-4">
+                                <div className="space-y-4">
+                                  <div>
+                                    <h4 className="font-bold text-black mb-2 tracking-wide">FULL ANALYSIS</h4>
+                                    <p className="text-black leading-relaxed">{article.content}</p>
+                                  </div>
+                                  
+                                  <div>
+                                    <h4 className="font-bold text-black mb-2 tracking-wide">KEY INSIGHTS</h4>
+                                    <ul className="list-disc list-inside text-black space-y-1">
+                                      <li>Market impact assessment based on current economic indicators</li>
+                                      <li>Institutional investor sentiment and positioning analysis</li>
+                                      <li>Regulatory implications and compliance considerations</li>
+                                      <li>Strategic recommendations for portfolio management</li>
+                                    </ul>
+                                  </div>
+
+                                  <div>
+                                    <h4 className="font-bold text-black mb-2 tracking-wide">RELATED SECTORS</h4>
+                                    <div className="flex flex-wrap gap-2">
+                                      {['Financial Services', 'Capital Markets', 'Investment Banking', 'Asset Management'].map((sector, idx) => (
+                                        <span key={idx} className="bg-black text-white px-3 py-1 text-xs font-bold tracking-wide">
+                                          {sector.toUpperCase()}
+                                        </span>
+                                      ))}
+                                    </div>
+                                  </div>
+
+                                  {article.url && (
+                                    <div className="pt-4 border-t border-gray-300">
+                                      <a href="#" className="inline-flex items-center space-x-2 text-black hover:text-gray-700 font-bold tracking-wide">
+                                        <ExternalLink className="w-4 h-4" />
+                                        <span>VIEW ORIGINAL REPORT</span>
+                                      </a>
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            )}
                             
                             {article.keywords.length > 0 && (
                               <div className="flex flex-wrap gap-2">
-                                {article.keywords.slice(0, 5).map((keyword, keywordIndex) => (
+                                {article.keywords.slice(0, 6).map((keyword, keywordIndex) => (
                                   <span
                                     key={keywordIndex}
                                     className="bg-black text-white px-3 py-1 text-xs font-bold tracking-wide"
@@ -288,6 +355,16 @@ export const NewsAggregator: React.FC = () => {
                                   </span>
                                 ))}
                               </div>
+                            )}
+
+                            {!isExpanded && (
+                              <button
+                                onClick={() => toggleArticle(article.id)}
+                                className="mt-4 bg-black hover:bg-gray-800 text-white px-6 py-2 font-bold tracking-wide transition-colors flex items-center space-x-2"
+                              >
+                                <span>READ FULL ANALYSIS</span>
+                                <ChevronDown className="w-4 h-4" />
+                              </button>
                             )}
                           </div>
                         );
@@ -298,40 +375,40 @@ export const NewsAggregator: React.FC = () => {
               })}
             </div>
 
-            {/* Extension Guide */}
+            {/* Platform Features */}
             <div className="border-t-4 border-black bg-black text-white p-8">
-              <h3 className="text-2xl font-bold mb-6 tracking-wider">SYSTEM ARCHITECTURE & SCALABILITY</h3>
+              <h3 className="text-2xl font-bold mb-6 tracking-wider">PLATFORM CAPABILITIES</h3>
               <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-sm">
                 <div>
-                  <h4 className="font-bold text-white mb-3 tracking-wide">REAL-TIME DATA INTEGRATION</h4>
+                  <h4 className="font-bold text-white mb-3 tracking-wide">REAL-TIME INTELLIGENCE</h4>
                   <ul className="space-y-1">
-                    <li>• Bloomberg Terminal API integration</li>
-                    <li>• Reuters Eikon data feeds</li>
-                    <li>• SEC EDGAR filing automation</li>
+                    <li>• Live market data integration</li>
+                    <li>• Institutional-grade analytics</li>
+                    <li>• Advanced sentiment analysis</li>
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-bold text-white mb-3 tracking-wide">ENTERPRISE DATA ARCHITECTURE</h4>
+                  <h4 className="font-bold text-white mb-3 tracking-wide">ENTERPRISE FEATURES</h4>
                   <ul className="space-y-1">
-                    <li>• High-frequency data warehousing</li>
-                    <li>• Real-time market data caching</li>
-                    <li>• Advanced financial analytics engine</li>
-                  </ul>
-                </div>
-                <div>
-                  <h4 className="font-bold text-white mb-3 tracking-wide">ALGORITHMIC INTELLIGENCE</h4>
-                  <ul className="space-y-1">
-                    <li>• Machine learning sentiment analysis</li>
-                    <li>• Predictive market modeling</li>
+                    <li>• Custom portfolio tracking</li>
                     <li>• Risk assessment algorithms</li>
+                    <li>• Compliance monitoring</li>
                   </ul>
                 </div>
                 <div>
-                  <h4 className="font-bold text-white mb-3 tracking-wide">INSTITUTIONAL DEPLOYMENT</h4>
+                  <h4 className="font-bold text-white mb-3 tracking-wide">PROFESSIONAL TOOLS</h4>
                   <ul className="space-y-1">
-                    <li>• Multi-tenant enterprise architecture</li>
-                    <li>• Compliance and audit trails</li>
-                    <li>• Custom client dashboards</li>
+                    <li>• Executive briefing formats</li>
+                    <li>• Customizable alert systems</li>
+                    <li>• Multi-asset class coverage</li>
+                  </ul>
+                </div>
+                <div>
+                  <h4 className="font-bold text-white mb-3 tracking-wide">INSTITUTIONAL ACCESS</h4>
+                  <ul className="space-y-1">
+                    <li>• Premium data sources</li>
+                    <li>• White-label solutions</li>
+                    <li>• API integration support</li>
                   </ul>
                 </div>
               </div>
@@ -339,24 +416,58 @@ export const NewsAggregator: React.FC = () => {
           </div>
         )}
 
-        {/* Initial State */}
+        {/* Initial State - Professional Product Landing */}
         {!magazine && !isProcessing && (
           <div className="text-center py-16">
             <TrendingUp className="w-20 h-20 text-white mx-auto mb-6" />
-            <h2 className="text-3xl font-bold text-white mb-4 tracking-wide">FINANCIAL INTELLIGENCE READY</h2>
-            <p className="text-gray-300 mb-8 text-lg">
-              Initiate comprehensive analysis of 20 premium financial reports from elite market sources.
+            <h2 className="text-4xl font-bold text-white mb-4 tracking-wide">FINANCIAL INTELLIGENCE PLATFORM</h2>
+            <p className="text-gray-300 mb-8 text-xl max-w-3xl mx-auto leading-relaxed">
+              Access comprehensive analysis of premium financial reports from the world's leading market intelligence sources. 
+              Our proprietary algorithms deliver institutional-grade insights for professional investors and financial institutions.
             </p>
-            <div className="bg-white text-black p-8 max-w-3xl mx-auto border-4 border-white">
-              <h3 className="font-bold text-black mb-4 text-xl tracking-wider">INSTITUTIONAL-GRADE CAPABILITIES</h3>
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm font-medium">
-                <div>• Real-time market data simulation</div>
-                <div>• Proprietary relevance algorithms</div>
-                <div>• Advanced sentiment classification</div>
-                <div>• Intelligent duplicate filtering</div>
-                <div>• Executive-level report formatting</div>
-                <div>• Enterprise-ready architecture</div>
+            
+            <div className="bg-white text-black p-8 max-w-4xl mx-auto border-4 border-white mb-8">
+              <h3 className="font-bold text-black mb-6 text-2xl tracking-wider">PLATFORM FEATURES</h3>
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 text-sm font-medium">
+                <div className="text-center p-4 border border-gray-300">
+                  <TrendingUp className="w-8 h-8 text-black mx-auto mb-2" />
+                  <div className="font-bold mb-1">MARKET INTELLIGENCE</div>
+                  <div className="text-xs text-gray-600">Real-time market analysis and trend identification</div>
+                </div>
+                <div className="text-center p-4 border border-gray-300">
+                  <Target className="w-8 h-8 text-black mx-auto mb-2" />
+                  <div className="font-bold mb-1">RELEVANCE SCORING</div>
+                  <div className="text-xs text-gray-600">Proprietary algorithms for content prioritization</div>
+                </div>
+                <div className="text-center p-4 border border-gray-300">
+                  <PieChart className="w-8 h-8 text-black mx-auto mb-2" />
+                  <div className="font-bold mb-1">SENTIMENT ANALYSIS</div>
+                  <div className="text-xs text-gray-600">Advanced NLP for market sentiment classification</div>
+                </div>
+                <div className="text-center p-4 border border-gray-300">
+                  <Landmark className="w-8 h-8 text-black mx-auto mb-2" />
+                  <div className="font-bold mb-1">INSTITUTIONAL SOURCES</div>
+                  <div className="text-xs text-gray-600">Premium data from Bloomberg, WSJ, FT, Reuters</div>
+                </div>
+                <div className="text-center p-4 border border-gray-300">
+                  <Building2 className="w-8 h-8 text-black mx-auto mb-2" />
+                  <div className="font-bold mb-1">EXECUTIVE REPORTING</div>
+                  <div className="text-xs text-gray-600">Professional-grade intelligence digests</div>
+                </div>
+                <div className="text-center p-4 border border-gray-300">
+                  <DollarSign className="w-8 h-8 text-black mx-auto mb-2" />
+                  <div className="font-bold mb-1">INVESTMENT INSIGHTS</div>
+                  <div className="text-xs text-gray-600">Actionable intelligence for portfolio decisions</div>
+                </div>
               </div>
+            </div>
+
+            <div className="bg-gray-900 text-white p-6 max-w-2xl mx-auto border border-gray-700">
+              <h4 className="font-bold text-white mb-3 text-lg tracking-wide">TRUSTED BY LEADING INSTITUTIONS</h4>
+              <p className="text-gray-300 text-sm">
+                Our platform serves hedge funds, investment banks, asset managers, and institutional investors 
+                who require the highest quality financial intelligence and market analysis.
+              </p>
             </div>
           </div>
         )}
