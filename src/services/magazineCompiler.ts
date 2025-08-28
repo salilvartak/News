@@ -69,12 +69,12 @@ export class MagazineCompiler {
     
     // Section priority order
     const sectionPriority = [
-      NewsCategory.TOP_STORIES,
+      NewsCategory.MARKETS,
       NewsCategory.FINANCE,
-      NewsCategory.TECHNOLOGY,
-      NewsCategory.WORLD_NEWS,
-      NewsCategory.POLITICS,
-      NewsCategory.HEALTH
+      NewsCategory.BANKING,
+      NewsCategory.INVESTMENTS,
+      NewsCategory.ECONOMICS,
+      NewsCategory.CORPORATE
     ];
     
     sectionPriority.forEach(category => {

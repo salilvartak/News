@@ -1,10 +1,10 @@
 export enum NewsCategory {
-  TOP_STORIES = "Top Stories",
   FINANCE = "Finance",
-  TECHNOLOGY = "Technology",
-  WORLD_NEWS = "World News",
-  POLITICS = "Politics",
-  HEALTH = "Health"
+  MARKETS = "Markets",
+  BANKING = "Banking",
+  INVESTMENTS = "Investments",
+  ECONOMICS = "Economics",
+  CORPORATE = "Corporate"
 }
 
 export enum Sentiment {

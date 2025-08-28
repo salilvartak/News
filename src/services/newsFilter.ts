@@ -20,34 +20,29 @@ const KEYWORD_WEIGHTS: KeywordWeights = {
 
 const CATEGORY_KEYWORDS: Record<NewsCategory, CategoryKeywords> = {
   [NewsCategory.FINANCE]: {
-    high_priority: ['federal reserve', 'interest rates', 'stock market', 'cryptocurrency', 'banking'],
-    medium_priority: ['investment', 'economy', 'inflation', 'GDP', 'earnings'],
-    low_priority: ['trading', 'currency', 'bonds', 'commodities', 'financial']
+    high_priority: ['federal reserve', 'interest rates', 'monetary policy', 'inflation', 'gdp'],
+    medium_priority: ['economy', 'economic growth', 'recession', 'unemployment', 'consumer spending'],
+    low_priority: ['financial', 'economic', 'fiscal', 'budget', 'debt']
   },
-  [NewsCategory.TECHNOLOGY]: {
-    high_priority: ['artificial intelligence', 'quantum computing', 'breakthrough', 'innovation'],
-    medium_priority: ['startup', 'tech stocks', 'cybersecurity', 'data breach', 'automation'],
-    low_priority: ['software', 'hardware', 'internet', 'digital', 'computing']
+  [NewsCategory.MARKETS]: {
+    high_priority: ['stock market', 's&p 500', 'dow jones', 'nasdaq', 'market rally'],
+    medium_priority: ['trading', 'volatility', 'bull market', 'bear market', 'market correction'],
+    low_priority: ['stocks', 'shares', 'equity', 'index', 'futures']
   },
-  [NewsCategory.WORLD_NEWS]: {
-    high_priority: ['climate summit', 'global agreement', 'international', 'trade war'],
-    medium_priority: ['european union', 'trade agreement', 'diplomatic', 'treaty'],
-    low_priority: ['foreign', 'international', 'global', 'worldwide', 'overseas']
+  [NewsCategory.BANKING]: {
+    high_priority: ['jpmorgan', 'goldman sachs', 'bank of america', 'morgan stanley', 'wells fargo'],
+    medium_priority: ['banking', 'loans', 'deposits', 'credit', 'financial services'],
+    low_priority: ['bank', 'lending', 'borrowing', 'mortgage', 'credit card']
   },
-  [NewsCategory.TOP_STORIES]: {
-    high_priority: ['breaking', 'historic', 'milestone', 'unprecedented'],
-    medium_priority: ['major', 'significant', 'important', 'critical'],
-    low_priority: ['news', 'report', 'update', 'announcement', 'development']
+  [NewsCategory.INVESTMENTS]: {
+    high_priority: ['private equity', 'venture capital', 'hedge funds', 'mutual funds', 'etf'],
+    medium_priority: ['investment', 'portfolio', 'asset management', 'wealth management', 'fund'],
+    low_priority: ['investing', 'investor', 'returns', 'yield', 'dividend']
   },
-  [NewsCategory.HEALTH]: {
-    high_priority: ['breakthrough', 'clinical trials', 'medical breakthrough', 'cure'],
-    medium_priority: ['treatment', 'healthcare', 'research', 'study'],
-    low_priority: ['medical', 'health', 'wellness', 'patient', 'hospital']
-  },
-  [NewsCategory.POLITICS]: {
-    high_priority: ['presidential election', 'campaign', 'voting', 'legislation'],
-    medium_priority: ['political', 'government', 'policy', 'congress'],
-    low_priority: ['politician', 'party', 'debate', 'poll', 'candidate']
+  [NewsCategory.CORPORATE]: {
+    high_priority: ['earnings', 'revenue', 'profit', 'quarterly results', 'annual report'],
+    medium_priority: ['corporate', 'company', 'business', 'ceo', 'management'],
+    low_priority: ['enterprise', 'firm', 'corporation', 'executive', 'board']
   }
 };
 
